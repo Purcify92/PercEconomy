@@ -54,6 +54,7 @@ The `config.yml` file lets you customize the plugin to suit your server's needs.
 - **STARTING BALANCE**: Lets you configure how much money new players should start with.
 - **CURRENCY SYMBOL**: Allows you to change the symbol used by the plugin.
 - **MESSAGES**: Allows you to customize every message sent by the plugin.
+
 Example `config.yml`:
 ```yaml
 # The starting balance for new players
