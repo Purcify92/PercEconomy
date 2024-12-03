@@ -5,6 +5,7 @@
       <element id="module-output" name="PercEconomy.main" />
       <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/config.yml" />
       <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/plugin.yml" />
+      <element id="library" level="project" name="Gradle: com.github.MilkBowl:VaultAPI:1.7" />
     </root>
   </artifact>
 </component>

@@ -1,13 +1,15 @@
 package com.purcify.dev.percEconomy;
 
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.purcify.dev.percEconomy.commands.BalanceCommand;
 import com.purcify.dev.percEconomy.commands.PayCommand;
 import com.purcify.dev.percEconomy.commands.EconomyCommand;
 
-// Main class of the PercEconomy plugin.
 public class PercEconomy extends JavaPlugin {
     private static PercEconomy instance;
+    private VaultHook economyHook;
 
     @Override
     public void onEnable() {
@@ -23,6 +25,13 @@ public class PercEconomy extends JavaPlugin {
         getCommand("balance").setExecutor(new BalanceCommand());
         getCommand("pay").setExecutor(new PayCommand());
         getCommand("economy").setExecutor(new EconomyCommand());
+
+        // Setup Vault integration
+        if (setupEconomy()) {
+            getLogger().info("Vault integration enabled successfully!");
+        } else {
+            getLogger().warning("Vault not found! Plugin will still work, but without Vault integration.");
+        }
     }
 
     @Override
@@ -31,18 +40,20 @@ public class PercEconomy extends JavaPlugin {
         DatabaseManager.getInstance().closeDatabase();
     }
 
-    /**
-     * Get the instance of the plugin.
-     *
-     * @return the plugin instance
-     */
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+
+        economyHook = new VaultHook();
+        getServer().getServicesManager().register(Economy.class, economyHook, this, ServicePriority.Normal);
+        return true;
+    }
+
     public static PercEconomy getInstance() {
         return instance;
     }
 
-    /**
-     * Reloads the plugin configuration.
-     */
     public void reloadPluginConfig() {
         reloadConfig();
     }
