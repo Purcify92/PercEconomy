@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PercEconomy:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PercEconomy_jar</output-path>
+    <root id="archive" name="PercEconomy.jar">
+      <element id="module-output" name="PercEconomy.main" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/config.yml" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/plugin.yml" />
+    </root>
+  </artifact>
+</component>

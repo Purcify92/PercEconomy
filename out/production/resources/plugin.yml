@@ -1,0 +1,28 @@
+name: PercEconomy
+version: '1.0-SNAPSHOT'
+main: com.purcify.dev.percEconomy.PercEconomy
+api-version: '1.21'
+author: Purcify
+commands: # Define the commands for the plugin
+  balance: # Define the /balance command used to check a player's balance
+    description: Check your balance.
+    usage: /balance [player]
+    aliases: [bal]
+    permission: perceconomy.balance
+    permission-message: You do not have permission to use this command.
+  pay: # Define the /pay command used to pay other players
+    description: Pay another player.
+    usage: /pay <player> <amount>
+    permission: perceconomy.pay
+    permission-message: You do not have permission to use this command.
+
+permissions: # Define the permissions for the plugin
+  perceconomy.balance:
+    description: Allows a player to check their balance.
+    default: true
+  perceconomy.balance.others:
+    description: Allows a player to check others' balances.
+    default: op
+  perceconomy.pay:
+    description: Allows a player to pay other players.
+    default: true
