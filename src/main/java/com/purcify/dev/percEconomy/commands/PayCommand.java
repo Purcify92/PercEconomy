@@ -1,5 +1,6 @@
 package com.purcify.dev.percEconomy.commands;
 
+import com.purcify.dev.percEconomy.PercEconomy;
 import com.purcify.dev.percEconomy.PlayerBalanceManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,9 +14,12 @@ import java.util.List;
 public class PayCommand implements CommandExecutor, TabCompleter {
 
     private PlayerBalanceManager balanceManager = new PlayerBalanceManager();
+    private PercEconomy plugin = PercEconomy.getInstance();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        String currencySymbol = plugin.getConfig().getString("currency-symbol", "$"); // Get the currency symbol
 
         if (!(sender instanceof Player)) { // Check if the sender is a player
             sender.sendMessage("Only players can execute this command.");
@@ -24,42 +28,69 @@ public class PayCommand implements CommandExecutor, TabCompleter {
 
         Player player = (Player) sender;
 
-        if (args.length != 2) { // Check if the correct number of arguments is provided
-            player.sendMessage(ChatColor.RED + "Usage: /pay <player> <amount>");
+        // Check if correct amount of arguments were given
+        if (args.length != 2) {
+            String usage = plugin.getConfig().getString("messages.pay.usage");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', usage));
             return true;
         }
 
+        // Check if provided player is valid/online
         Player target = Bukkit.getPlayer(args[0]);
-        if (target == null || !target.isOnline()) { // Check if the target player is online
-            player.sendMessage(ChatColor.RED + "Player not found or not online.");
+        if (target == null || !target.isOnline()) {
+            String message = plugin.getConfig().getString("messages.pay.player-not-found");
+            message = message.replace("{target}", args[0]);
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
             return true;
         }
 
-        if (target.equals(player)) { // Check if the target player is not the sender
-            player.sendMessage(ChatColor.RED + "You cannot pay yourself.");
+        // Check if player is trying to pay themselves
+        if (target.equals(player)) {
+            String message = plugin.getConfig().getString("messages.pay.pay-self");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
             return true;
         }
 
-        // Parse the amount to pay
+        // Check if amount is valid
         double amount;
         try {
             amount = Double.parseDouble(args[1]);
             if (amount <= 0) {
-                player.sendMessage(ChatColor.RED + "Amount must be positive.");
+                String message = plugin.getConfig().getString("messages.pay.negative-amount");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
                 return true;
             }
         } catch (NumberFormatException e) {
-            player.sendMessage(ChatColor.RED + "Invalid amount.");
+            String message = plugin.getConfig().getString("messages.pay.invalid-amount");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
             return true;
         }
 
-        // Withdraw the amount from the sender and add it to the target
+        // Check if player has enough balance and transfer the amount
         if (balanceManager.withdrawBalance(player.getUniqueId(), amount)) {
             balanceManager.addBalance(target.getUniqueId(), amount);
-            player.sendMessage(ChatColor.GREEN + "You have paid " + ChatColor.GOLD + amount + ChatColor.GREEN + " to " + ChatColor.AQUA + target.getName());
-            target.sendMessage(ChatColor.AQUA + player.getName() + ChatColor.GREEN + " has paid you " + ChatColor.GOLD + amount);
+
+            double senderBalance = balanceManager.getBalance(player.getUniqueId());
+            double receiverBalance = balanceManager.getBalance(target.getUniqueId());
+
+            String senderMessage = plugin.getConfig().getString("messages.pay.success");
+            senderMessage = senderMessage.replace("{amount}", String.format("%.2f", amount))
+                    .replace("{receiver}", target.getName())
+                    .replace("{balance}", String.format("%.2f", senderBalance))
+                    .replace("{currency}", currencySymbol);
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', senderMessage));
+
+            String receiverMessage = plugin.getConfig().getString("messages.pay.received");
+            receiverMessage = receiverMessage.replace("{amount}", String.format("%.2f", amount))
+                    .replace("{sender}", player.getName())
+                    .replace("{balance}", String.format("%.2f", receiverBalance))
+                    .replace("{currency}", currencySymbol);
+            target.sendMessage(ChatColor.translateAlternateColorCodes('&', receiverMessage));
         } else {
-            player.sendMessage(ChatColor.RED + "You do not have enough balance.");
+            String message = plugin.getConfig().getString("messages.pay.insufficient-funds");
+            message = message.replace("{balance}", String.format("%.2f", balanceManager.getBalance(player.getUniqueId())))
+                    .replace("{currency}", currencySymbol);
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
         }
 
         return true;

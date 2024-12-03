@@ -1,5 +1,5 @@
 name: PercEconomy
-version: '1.0-INITIAL'
+version: '1.1'
 main: com.purcify.dev.percEconomy.PercEconomy
 api-version: '1.21'
 author: Purcify
@@ -15,6 +15,11 @@ commands: # Define the commands for the plugin
     usage: /pay <player> <amount>
     permission: perceconomy.pay
     permission-message: You do not have permission to use this command.
+  economy: # Define the /economy command used to manage the economy system
+    description: Admin commands for the economy system.
+    usage: /economy <give|take|set|reload> [player] [amount]
+    permission: perceconomy.admin
+    permission-message: You do not have permission to use this command.
 
 permissions: # Define the permissions for the plugin
   perceconomy.balance:
@@ -26,3 +31,6 @@ permissions: # Define the permissions for the plugin
   perceconomy.pay:
     description: Allows a player to pay other players.
     default: true
+  perceconomy.admin:
+    description: Allows access to economy admin commands.
+    default: op

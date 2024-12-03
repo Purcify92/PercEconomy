@@ -1,5 +1,6 @@
 package com.purcify.dev.percEconomy.commands;
 
+import com.purcify.dev.percEconomy.PercEconomy;
 import com.purcify.dev.percEconomy.PlayerBalanceManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,32 +14,47 @@ import java.util.List;
 public class BalanceCommand implements CommandExecutor, TabCompleter {
 
     private PlayerBalanceManager balanceManager = new PlayerBalanceManager();
+    private PercEconomy plugin = PercEconomy.getInstance();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!(sender instanceof Player)) {
+        String currencySymbol = plugin.getConfig().getString("currency-symbol", "$"); // Get the currency symbol
+
+        if (!(sender instanceof Player)) { // Check if the sender is a player
             sender.sendMessage("Only players can execute this command.");
             return true;
         }
 
         Player player = (Player) sender;
 
+        // Handle Arguments for the /balance command
         if (args.length == 0) {
             // Show own balance
             double balance = balanceManager.getBalance(player.getUniqueId());
-            player.sendMessage(ChatColor.GREEN + "Your balance is: " + ChatColor.GOLD + balance);
+            String message = plugin.getConfig().getString("messages.balance.self");
+            message = message.replace("{balance}", String.format("%.2f", balance))
+                    .replace("{currency}", currencySymbol)
+                    .replace("{player}", player.getName());
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));;
         } else if (args.length == 1 && player.hasPermission("perceconomy.balance.others")) {
             // Show another player's balance
             Player target = Bukkit.getPlayer(args[0]);
             if (target != null) {
                 double balance = balanceManager.getBalance(target.getUniqueId());
-                player.sendMessage(ChatColor.GREEN + target.getName() + "'s balance is: " + ChatColor.GOLD + balance);
+                String message = plugin.getConfig().getString("messages.balance.others");
+                message = message.replace("{balance}", String.format("%.2f", balance))
+                        .replace("{currency}", currencySymbol)
+                        .replace("{player}", target.getName());
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
             } else {
-                player.sendMessage(ChatColor.RED + "Player not found.");
+                String message = plugin.getConfig().getString("messages.balance.player-not-found");
+                message = message.replace("{target}", args[0]);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
             }
         } else {
-            player.sendMessage(ChatColor.RED + "Usage: /balance [player]");
+            String usage = plugin.getConfig().getString("messages.balance.usage");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', usage));
         }
 
         return true;

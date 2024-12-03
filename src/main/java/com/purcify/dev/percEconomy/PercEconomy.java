@@ -3,6 +3,7 @@ package com.purcify.dev.percEconomy;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.purcify.dev.percEconomy.commands.BalanceCommand;
 import com.purcify.dev.percEconomy.commands.PayCommand;
+import com.purcify.dev.percEconomy.commands.EconomyCommand;
 
 // Main class of the PercEconomy plugin.
 public class PercEconomy extends JavaPlugin {
@@ -21,6 +22,7 @@ public class PercEconomy extends JavaPlugin {
         // Register commands
         getCommand("balance").setExecutor(new BalanceCommand());
         getCommand("pay").setExecutor(new PayCommand());
+        getCommand("economy").setExecutor(new EconomyCommand());
     }
 
     @Override
@@ -36,5 +38,12 @@ public class PercEconomy extends JavaPlugin {
      */
     public static PercEconomy getInstance() {
         return instance;
+    }
+
+    /**
+     * Reloads the plugin configuration.
+     */
+    public void reloadPluginConfig() {
+        reloadConfig();
     }
 }
