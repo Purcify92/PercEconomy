@@ -13,9 +13,9 @@
   - `/economy set <player> <amount>`: Set a player's balance.
   - `/economy reload`: Reload the configuration without having to restart the server.
 - Supports:
-  - Vault integration for compatibility with other plugins. `**SOON**`
+  - Vault integration for compatibility with other plugins. **SOON**
   - Configurable messages and currency format. 
-  - SQLite or MySQL storage options for flexibility. `**SOON**`
+  - SQLite or MySQL storage options for flexibility. **SOON**
 
 ---
 
@@ -33,7 +33,7 @@
 |-----------------------------|--------------------------|----------------------------------------|
 | `/balance [player]`         | `perceconomy.balance`    | View the balance of yourself or another player.         | 
 | `/pay <player> <amount>`    | `perceconomy.pay`        | Send money to another player.          |
-| `/economy <give|take|set|reload> [player] [amount]`    | `perceconomy.admin`        | Allows you to manage the balance of other players and reload the plugin's config.          |
+| `/economy <give/take/set/reload> [player] [amount]`    | `perceconomy.admin`        | Allows you to manage the balance of other players and reload the plugin's config.          |
 
 ---
 ## Placeholders
