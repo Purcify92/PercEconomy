@@ -30,8 +30,7 @@
 ## Commands & Permissions
 | Command                     | Permission               | Description                            |
 |-----------------------------|--------------------------|----------------------------------------|
-| `/balance [player]`         | `perceconomy.balance`    | View the balance of yourself           |
-|                             |                          | or another player                      |   
+| `/balance [player]`         | `perceconomy.balance`    | View the balance of yourself or another player.         | 
 | `/pay <player> <amount>`    | `perceconomy.pay`        | Send money to another player.          |
 
 ---
