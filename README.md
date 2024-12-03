@@ -24,7 +24,7 @@
 2. Place the `PercEconomy.jar` file into your server's `plugins` folder.
 3. Restart the server to generate the configuration files.
 4. Edit the `config.yml` in the `PercEconomy` folder to customize the plugin.
-5. Restart the server to apply changes.
+5. Restart the server or use `/economy reload` to apply config changes.
 
 ---
 
