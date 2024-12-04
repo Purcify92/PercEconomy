@@ -13,7 +13,7 @@
   - `/economy set <player> <amount>`: Set a player's balance.
   - `/economy reload`: Reload the configuration without having to restart the server.
 - Supports:
-  - Vault integration for compatibility with other plugins. **SOON**
+  - Vault integration for compatibility with other plugins.
   - Configurable messages and currency format. 
   - SQLite or MySQL storage options for flexibility. **SOON**
 
